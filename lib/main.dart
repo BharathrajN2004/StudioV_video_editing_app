@@ -1,4 +1,3 @@
-import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -59,11 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    FFmpegKit.execute('-encoders').then((session) async {
-      final logs = await session.getAllLogs();
-      logs.forEach((log) => print(log.getMessage()));
-    });
-
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
