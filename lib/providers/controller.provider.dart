@@ -88,7 +88,7 @@ class VideoManager extends StateNotifier<VideoState> {
   late final ScrollController musicScrollController;
 
   Timer? _scrollTimer;
-  final double _scrollSpeed = 1; // Controls the speed of scroll
+  final double _scrollSpeed = 1.05; // Controls the speed of scroll
   late List<int> _cumulativeVideoStartTimes = [];
 
   void _initializeScrollControllers() {
@@ -186,7 +186,7 @@ class VideoManager extends StateNotifier<VideoState> {
 
     timelineScrollController.jumpTo(initialScrollOffset);
 
-    _scrollTimer = Timer.periodic(const Duration(microseconds: 16300), (timer) {
+    _scrollTimer = Timer.periodic(const Duration(microseconds: 21500), (timer) {
       if (timelineScrollController.hasClients && state.isVideoPlaying) {
         final currentScrollPosition = timelineScrollController.position.pixels;
 
@@ -240,7 +240,9 @@ class VideoManager extends StateNotifier<VideoState> {
       // Check if it was the last video
       if (state.currentVideoIndex == state.videoControllers.length - 1) {
         // Restart all controllers if it was the last video
-        restartAll();
+        // restartAll();
+        stopScrollingOnPause();
+        state = state.copyWith(isVideoPlaying: false);
       } else {
         // Proceed to the next video
         state = state.copyWith(
