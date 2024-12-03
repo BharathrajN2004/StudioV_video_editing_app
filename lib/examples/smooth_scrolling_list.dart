@@ -22,7 +22,7 @@ class _AutoScrollingListState extends State<AutoScrollingList> {
   }
 
   void _startAutoScroll() {
-    _scrollTimer = Timer.periodic(Duration(milliseconds: 10), (timer) {
+    _scrollTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (_scrollController.hasClients && _isScrolling) {
         double maxScrollExtent = _scrollController.position.maxScrollExtent;
         double currentScrollPosition = _scrollController.position.pixels;
@@ -59,7 +59,7 @@ class _AutoScrollingListState extends State<AutoScrollingList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Auto Scrolling List with Pause/Resume'),
+        title: const Text('Auto Scrolling List with Pause/Resume'),
         actions: [
           IconButton(
             icon: Icon(_isScrolling ? Icons.pause : Icons.play_arrow),

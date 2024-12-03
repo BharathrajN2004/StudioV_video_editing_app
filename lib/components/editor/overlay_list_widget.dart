@@ -29,7 +29,7 @@ class OverlayWidget extends ConsumerWidget {
               activeLayer == Layers.videoOverlay
           ? 1
           : .5,
-      child: Container(
+      child: SizedBox(
         height: 45,
         child: ListView.builder(
             controller: videoManager.overlayScrollController,

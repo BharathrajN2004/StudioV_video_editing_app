@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 class ColorReplaceVideoPlayer extends StatefulWidget {
   final Color targetColor;
 
-  ColorReplaceVideoPlayer({required this.targetColor});
+  const ColorReplaceVideoPlayer({super.key, required this.targetColor});
 
   @override
   _ColorReplaceVideoPlayerState createState() =>
@@ -45,7 +45,7 @@ class _ColorReplaceVideoPlayerState extends State<ColorReplaceVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     if (!_controller.value.isInitialized || _fragmentProgram == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     final normalizedColor = [

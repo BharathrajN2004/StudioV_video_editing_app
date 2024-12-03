@@ -100,7 +100,7 @@ Future getDominantColor({required WidgetRef ref}) async {
   final String tumbNailPath = path.join(tumbNailDirPath, "output%03d.png");
 
   String command =
-      '''-i ${video.path} -vf "select=\'not(mod(n\\,100))\'" -vsync vfr -frames:v 6 $tumbNailPath''';
+      '''-i ${video.path} -vf "select='not(mod(n\\,100))'" -vsync vfr -frames:v 6 $tumbNailPath''';
 
   FFmpegSession session = await FFmpegKit.execute(command);
   final returnCode = await session.getReturnCode();

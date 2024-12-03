@@ -25,7 +25,7 @@ class MusicList extends ConsumerWidget {
 
     return Opacity(
       opacity: activeLayer == Layers.music ? 1 : .5,
-      child: Container(
+      child: SizedBox(
         height: 45,
         child: ListView.builder(
             physics: const BouncingScrollPhysics(),

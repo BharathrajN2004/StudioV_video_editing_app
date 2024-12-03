@@ -105,7 +105,7 @@ class _VideoEditingPageState extends ConsumerState<VideoEditingPage> {
 
                   /// Extra options view
                   ///
-                  SubOptionHelper(),
+                  const SubOptionHelper(),
 
                   /// options List
                   ///

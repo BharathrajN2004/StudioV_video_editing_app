@@ -375,19 +375,19 @@ class _ProjectSettingsPageState extends ConsumerState<ProjectSettingsPage> {
               ///
               GestureDetector(
                 onTap: () async {
-                  if (projectState.isRemoveGS == true) {
-                    greenScreenRemover(ref: ref);
-                  } else {
-                    ref
-                        .read(videoManagerProvider.notifier)
-                        .addVideoFromFile(projectState.videoFile!);
-                    extractFrames(
-                      videoFile: projectState.videoFile!,
-                      notifier: ref.read(videoManagerProvider.notifier),
-                      projectNotifier: notifier,
-                      videoName: projectState.videoName!,
-                    );
-                  }
+                  // if (projectState.isRemoveGS == true) {
+                  //   // greenScreenRemover(ref: ref);
+                  // } else {
+                  ref
+                      .read(videoManagerProvider.notifier)
+                      .addVideoFromFile(projectState.videoFile!);
+                  extractFrames(
+                    videoFile: projectState.videoFile!,
+                    notifier: ref.read(videoManagerProvider.notifier),
+                    projectNotifier: notifier,
+                    videoName: projectState.videoName!,
+                  );
+                  // }
                   Navigator.push(
                     context,
                     MaterialPageRoute(

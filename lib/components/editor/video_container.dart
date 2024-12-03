@@ -1,8 +1,12 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_shaders/flutter_shaders.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../providers/controller.provider.dart';
+import '../../providers/project_starter.provider.dart';
 
 class VideoContainer extends ConsumerStatefulWidget {
   const VideoContainer({
@@ -33,6 +37,8 @@ class VideoContainerState extends ConsumerState<VideoContainer> {
     VideoPlayerController controller =
         videoState.videoControllers[videoState.currentVideoIndex];
 
+    ProjectState projectState = ref.watch(projectProvider);
+
     return Expanded(
       flex: 5,
       child: LayoutBuilder(
@@ -54,7 +60,36 @@ class VideoContainerState extends ConsumerState<VideoContainer> {
               width: width,
               child: Stack(
                 children: [
-                  VideoPlayer(controller),
+                  ShaderBuilder(
+                    assetKey: 'assets/shaders/color_replace.frag',
+                    (BuildContext context, FragmentShader shader, _) =>
+                        AnimatedSampler(
+                      (ui.Image image, Size size, Canvas canvas) {
+                        shader
+                          ..setFloat(0, size.width)
+                          ..setFloat(1, size.height)
+                          ..setImageSampler(0, image);
+                        Color color = projectState.chromakey!;
+                        // Convert color to premultiplied opacity.
+                        shader.setFloat(
+                            2, color.red / 255 * color.opacity); // uColor r
+                        shader.setFloat(
+                            3, color.green / 255 * color.opacity); // uColor g
+                        shader.setFloat(
+                            4, color.blue / 255 * color.opacity); // uColor b
+                        shader.setFloat(5, color.opacity);
+                        canvas.drawRect(
+                            Offset.zero & size, Paint()..shader = shader);
+                      },
+                      child: Center(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * .35,
+                          width: MediaQuery.of(context).size.width,
+                          child: VideoPlayer(controller),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
