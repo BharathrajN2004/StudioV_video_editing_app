@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
@@ -9,12 +10,14 @@ class VideoState {
   final bool isVideoPlaying;
   final List<VideoPlayerController> videoControllers;
   final Duration totalDuration; // New field for total duration
+  final Directory frameDirectory;
 
   VideoState({
     required this.currentVideoIndex,
     required this.isVideoPlaying,
     required this.videoControllers,
     required this.totalDuration,
+    required this.frameDirectory,
   });
 
   VideoState copyWith({
@@ -22,12 +25,14 @@ class VideoState {
     bool? isVideoPlaying,
     List<VideoPlayerController>? videoControllers,
     Duration? totalDuration,
+    Directory? frameDirectory,
   }) {
     return VideoState(
       currentVideoIndex: currentVideoIndex ?? this.currentVideoIndex,
       isVideoPlaying: isVideoPlaying ?? this.isVideoPlaying,
       videoControllers: videoControllers ?? this.videoControllers,
       totalDuration: totalDuration ?? this.totalDuration,
+      frameDirectory: frameDirectory ?? this.frameDirectory,
     );
   }
 }
@@ -37,10 +42,12 @@ class VideoState {
 class VideoManager extends StateNotifier<VideoState> {
   VideoManager()
       : super(VideoState(
-            currentVideoIndex: 0,
-            isVideoPlaying: false,
-            videoControllers: [],
-            totalDuration: Duration.zero)) {
+          currentVideoIndex: 0,
+          isVideoPlaying: false,
+          videoControllers: [],
+          totalDuration: Duration.zero,
+          frameDirectory: Directory(""),
+        )) {
     _initializeScrollControllers();
     _addScrollListener();
   }
@@ -54,8 +61,8 @@ class VideoManager extends StateNotifier<VideoState> {
     state = state.copyWith(totalDuration: totalDuration);
   }
 
-  Future<void> addVideoFromAsset(String assetPath) async {
-    final controller = VideoPlayerController.asset(assetPath);
+  Future<void> addVideoFromFile(File video) async {
+    final controller = VideoPlayerController.file(video);
     await controller.initialize();
     controller.addListener(_handleVideoEnd);
     controller.addListener(() {
@@ -104,6 +111,10 @@ class VideoManager extends StateNotifier<VideoState> {
         syncVideoWithScrollPosition(offset: timelineScrollController.offset);
       }
     });
+  }
+
+  void setFrameDir(Directory path) {
+    state = state.copyWith(frameDirectory: path);
   }
 
   void _calculateCumulativeStartTimes() {

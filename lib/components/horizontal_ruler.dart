@@ -11,6 +11,7 @@ class HorizontalRuler extends StatefulWidget {
     this.startAnimationIndex = 20,
     this.enableStartAnimation = true,
     this.opacityRanges = const [5, 1, 10, .8, 15, .5, 30, .3],
+    this.setter,
   });
   final int maxValue;
   final String? additionalText;
@@ -18,6 +19,7 @@ class HorizontalRuler extends StatefulWidget {
   final double startAnimationIndex;
   final bool enableStartAnimation;
   final List<num> opacityRanges;
+  final Function(double)? setter;
 
   @override
   State<HorizontalRuler> createState() => HorizontalRulerState();
@@ -54,6 +56,9 @@ class HorizontalRulerState extends State<HorizontalRuler> {
         selectedValue = (_scrollController.offset / 9.5).round().toDouble();
       }
     });
+    if (widget.setter != null) {
+      widget.setter!(selectedValue);
+    }
   }
 
   @override

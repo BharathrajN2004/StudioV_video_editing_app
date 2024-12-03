@@ -33,6 +33,7 @@ class HomePageState extends ConsumerState<HomePage> {
         if (didPop) {}
       },
       child: Scaffold(
+        backgroundColor: bgColor,
         floatingActionButton: const NewProjectButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: SafeArea(
@@ -55,7 +56,7 @@ class HomePageState extends ConsumerState<HomePage> {
                     ),
                     const Spacer(),
                     Image.asset(
-                      "assets/icons/listL.png",
+                      "assets/icons/list.png",
                       height: aspectRatio * 60,
                       width: aspectRatio * 60,
                       fit: BoxFit.cover,
@@ -65,8 +66,9 @@ class HomePageState extends ConsumerState<HomePage> {
                       child: Icon(
                         Symbols.more_vert_rounded,
                         size: aspectRatio * 60,
-                        weight: 10000,
-                        color: Colors.black,
+                        weight: 700,
+                        grade: 200,
+                        color: iconColor,
                       ),
                     )
                   ],
@@ -83,7 +85,7 @@ class HomePageState extends ConsumerState<HomePage> {
                       ),
                       SizedBox(height: height * 0.02),
                       SizedBox(
-                        height: height * 0.08,
+                        height: height * 0.085,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: quickActions.entries.map((data) {
@@ -96,15 +98,16 @@ class HomePageState extends ConsumerState<HomePage> {
                                 vertical: height * .01,
                               ),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: textColor.withOpacity(.6)),
+                                borderRadius: BorderRadius.circular(12),
+                                color: secondaryColor,
+                              ),
                               child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Image.asset(
                                     "assets/icons/${data.value}.png",
-                                    height: aspectRatio * 60,
+                                    height: aspectRatio * 55,
                                     fit: BoxFit.fitHeight,
                                   ),
                                   CustomText(

@@ -12,7 +12,6 @@ import '../components/editor/timeline_widget.dart';
 import '../components/editor/video_container.dart';
 import '../components/editor/video_footer.dart';
 import '../providers/active_layer.provider.dart';
-import '../providers/controller.provider.dart';
 import '../utilities/constants.dart';
 import '../utilities/theme.dart';
 
@@ -27,12 +26,6 @@ class _VideoEditingPageState extends ConsumerState<VideoEditingPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize the video assets after the first frame is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(videoManagerProvider.notifier)
-          .addVideoFromAsset("assets/example/video.mp4");
-    });
   }
 
   @override

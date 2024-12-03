@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../providers/controller.provider.dart';
 import '../../../utilities/theme.dart';
 import '../../horizontal_ruler.dart';
 
-class VolumeControllerWidget extends StatefulWidget {
+class VolumeControllerWidget extends ConsumerStatefulWidget {
   const VolumeControllerWidget({super.key});
 
   @override
-  State<VolumeControllerWidget> createState() => _VolumeControllerWidgetState();
+  ConsumerState<VolumeControllerWidget> createState() =>
+      _VolumeControllerWidgetState();
 }
 
-class _VolumeControllerWidgetState extends State<VolumeControllerWidget> {
+class _VolumeControllerWidgetState
+    extends ConsumerState<VolumeControllerWidget> {
   bool isMuted = false;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     double aspectRatio = MediaQuery.of(context).size.aspectRatio;
+
+    VideoState videoState = ref.watch(videoManagerProvider);
 
     return Container(
       height: height * .08,
@@ -27,16 +33,28 @@ class _VolumeControllerWidgetState extends State<VolumeControllerWidget> {
       child: Row(
         children: [
           isMuted
-              ? const Expanded(
+              ? Expanded(
                   child: IgnorePointer(
                     child: Opacity(
                       opacity: .3,
-                      child: HorizontalRuler(maxValue: 101),
+                      child: HorizontalRuler(
+                          maxValue: 101,
+                          setter: (value) {
+                            videoState
+                                .videoControllers[videoState.currentVideoIndex]
+                                .setVolume(value / 100);
+                          }),
                     ),
                   ),
                 )
-              : const Expanded(
-                  child: HorizontalRuler(maxValue: 101),
+              : Expanded(
+                  child: HorizontalRuler(
+                      maxValue: 101,
+                      setter: (value) {
+                        videoState
+                            .videoControllers[videoState.currentVideoIndex]
+                            .setVolume(value / 100);
+                      }),
                 ),
 
           SizedBox(
@@ -46,6 +64,12 @@ class _VolumeControllerWidgetState extends State<VolumeControllerWidget> {
           /// Mute button
           GestureDetector(
             onTap: () {
+              if (videoState.videoControllers[videoState.currentVideoIndex]
+                      .value.volume >
+                  0) {
+                videoState.videoControllers[videoState.currentVideoIndex]
+                    .setVolume(0);
+              }
               setState(() {
                 isMuted = !isMuted;
               });

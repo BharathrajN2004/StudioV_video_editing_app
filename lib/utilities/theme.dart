@@ -21,6 +21,8 @@ const Color separatorColor = Color(0xFFF7D74E);
 const Color lightShade1 = Color(0xFFD0E2FA);
 const Color lightShade2 = Color(0xFF7E8EA8);
 
+const Color greyShade = Color(0xFF313133);
+
 const int superLargeTextSize = 45;
 const int veryLargeTextSize = 35;
 const int largeTextSize = 28;

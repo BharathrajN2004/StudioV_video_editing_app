@@ -17,12 +17,12 @@ class _VideoEditorPageState extends ConsumerState<VideoEditorPage> {
     super.initState();
     // Initialize the video assets after the first frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(videoManagerProvider.notifier)
-          .addVideoFromAsset("assets/example/video.mp4");
-      ref
-          .read(videoManagerProvider.notifier)
-          .addVideoFromAsset("assets/example/video2.mp4");
+      // ref
+      //     .read(videoManagerProvider.notifier)
+      //     .addVideoFromAsset("assets/example/video.mp4");
+      // ref
+      //     .read(videoManagerProvider.notifier)
+      //     .addVideoFromAsset("assets/example/video2.mp4");
     });
   }
 

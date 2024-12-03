@@ -24,7 +24,7 @@ class MusicList extends ConsumerWidget {
     int totalDuration = videoState.totalDuration.inSeconds + 1;
 
     return Opacity(
-      opacity: activeLayer == null || activeLayer == Layers.music ? 1 : .5,
+      opacity: activeLayer == Layers.music ? 1 : .5,
       child: Container(
         height: 45,
         child: ListView.builder(

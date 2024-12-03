@@ -24,8 +24,7 @@ class OverlayWidget extends ConsumerWidget {
     int totalDuration = videoState.totalDuration.inSeconds + 1;
 
     return Opacity(
-      opacity: activeLayer == null ||
-              activeLayer == Layers.textOverlay ||
+      opacity: activeLayer == Layers.textOverlay ||
               activeLayer == Layers.imageOverlay ||
               activeLayer == Layers.videoOverlay
           ? 1

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:video_editing_app/utilities/theme.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
+import '../../functions/pick_video.function.dart';
+import '../../utilities/theme.dart';
 import '../text.dart';
 
 class NewProjectButton extends ConsumerWidget {
@@ -15,22 +17,11 @@ class NewProjectButton extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () async {
-        // try {
-        //   String? videoName = await pickVideo(ref: ref, context: context);
-        //   if (videoName != null) {
-        //     getDominantColor(ref: ref, videoName: videoName);
-
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) =>
-        //             VideoPreprocessingPage(videoName: videoName),
-        //       ),
-        //     );
-        //   }
-        // } catch (error) {
-        //   ConsoleLogger.error(error);
-        // }
+        try {
+          await pickVideo(context: context, ref: ref);
+        } catch (error) {
+          print(error);
+        }
       },
       child: Container(
         width: width * .5,
@@ -46,14 +37,17 @@ class NewProjectButton extends ConsumerWidget {
             CustomText(
               text: "New Project",
               color: Colors.white,
-              weight: FontWeight.w800,
-              size: largeTextSize * aspectRatio,
+              weight: FontWeight.w900,
+              size: veryLargeTextSize * aspectRatio,
             ),
             SizedBox(width: width * 0.02),
             Icon(
-              Icons.add_rounded,
+              Symbols.add_rounded,
               size: aspectRatio * 60,
               color: Colors.white,
+              weight: 700,
+              grade: 200,
+              opticalSize: 48,
             ),
           ],
         ),
