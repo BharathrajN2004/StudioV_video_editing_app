@@ -7,7 +7,6 @@ import 'package:shimmer/shimmer.dart';
 
 import '../components/text.dart';
 import '../functions/extract_frames.function.dart';
-import '../functions/green_screen_remover.function.dart';
 import '../providers/controller.provider.dart';
 import '../providers/project_starter.provider.dart';
 import '../utilities/theme.dart';

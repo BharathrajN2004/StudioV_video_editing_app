@@ -12,7 +12,7 @@ void main() {
     vec3 imageColor = texture(image, uv).xyz;
 
     // Check if imageColor matches uColor (ignoring alpha)
-    bool isColorMatch = all(lessThan(abs(imageColor - uColor.xyz), vec3(0.3))); // Tolerance of 0.01
+    bool isColorMatch = all(lessThan(abs(imageColor - uColor.xyz), vec3(0.3))); // Tolerance of 0.3
 
     if (isColorMatch) {
         // If the color matches, set fragColor to transparent

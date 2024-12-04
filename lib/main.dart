@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:video_editing_app/functions/clear_directory.dart';
 
-import 'views/home_page.dart';
+import 'functions/clear_directory.dart';
+// import 'views/home_page.dart';
+import 'views/splash_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       title: "StudioV",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: "Nunito"),
-      home: const HomePage()
+      home: const SplashScreen()
     );
   }
 }
