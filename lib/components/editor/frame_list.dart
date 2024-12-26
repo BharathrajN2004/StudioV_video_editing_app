@@ -56,32 +56,32 @@ class _FrameListState extends ConsumerState<FrameList> {
     final videoState = ref.watch(videoManagerProvider);
     final videoManager = ref.watch(videoManagerProvider.notifier);
 
-    Layers? activeLayer = ref.watch(activeLayerProvider);
+    Layers? activeLayer = ref.watch(activeLayerProvider)?.$1;
     LayerNotifier notifier = ref.read(activeLayerProvider.notifier);
 
     int totalDuration = videoState.totalDuration.inSeconds + 1;
 
     return Opacity(
-      opacity: activeLayer == Layers.frame ? 1 : .5,
+      opacity: activeLayer == Layers.frame || activeLayer == null ? 1 : .5,
       child: Container(
         height: 52,
         margin: const EdgeInsets.symmetric(vertical: 2.5),
         child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
+            // physics: const BouncingScrollPhysics(),
             controller: videoManager.frameScrollController,
             scrollDirection: Axis.horizontal,
-            itemCount: (totalDuration * .75).toInt() + 1,
+            itemCount: totalDuration,
             padding: EdgeInsets.symmetric(horizontal: width * .48),
             itemBuilder: (context, index) {
-              bool isLast = ((totalDuration * .75).toInt() + 1) == index + 1;
+              bool isLast = (totalDuration) == index + 1;
               bool isSelected = activeLayer == Layers.frame;
 
-              bool available = index <= _imagePathList.length;
+              bool available = index < _imagePathList.length;
 
               return GestureDetector(
                 onTap: () {
                   if (Layers.frame != activeLayer) {
-                    notifier.toggleActiveLayer(Layers.frame);
+                    notifier.toggleActiveLayer(layer: Layers.frame);
                   }
                 },
                 child: Container(
@@ -134,15 +134,23 @@ class _FrameListState extends ConsumerState<FrameList> {
                                     bottomRight: Radius.circular(10))
                                 // Others
                                 : BorderRadius.circular(0),
-                    child: available
+                    child: available == false && index > 0
                         ? SizedBox(
-                            width: 60,
+                            width: 45,
                             child: Image.file(
-                              File(_imagePathList[index]),
+                              File(_imagePathList[_imagePathList.length - 1]),
                               fit: BoxFit.cover,
                             ),
                           )
-                        : const SizedBox(width: 60),
+                        : available
+                            ? SizedBox(
+                                width: 45,
+                                child: Image.file(
+                                  File(_imagePathList[index]),
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : const SizedBox(width: 45),
                   ),
                 ),
               );

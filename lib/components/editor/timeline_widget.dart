@@ -29,12 +29,13 @@ class TimeLineWidget extends ConsumerWidget {
             horizontal: (width * .48),
           ),
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: totalDuration,
+          itemCount: totalDuration ,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             return Container(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               width: 45,
+              color: Colors.transparent,
               child: index % 3 == 0
                   ? Text(
                       '${index}s',

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../models/text_editor_class.model.dart';
+import '../../providers/active_layer.provider.dart';
 import '../../providers/controller.provider.dart';
 import '../../providers/suboption.provider.dart';
+import '../../providers/text_editor.provider.dart';
 import '../../utilities/constants.dart';
 import '../../utilities/theme.dart';
 import '../horizontal_ruler.dart';
@@ -24,6 +27,13 @@ class SubOptionHelper extends ConsumerWidget {
     SubOptions? option = ref.watch(subOptionProvider);
     VideoState videoState = ref.watch(videoManagerProvider);
 
+    List<TextEditorClass> textList = ref.watch(textEditorProvider);
+    TextEditorNotifier textEditorNotifier =
+        ref.read(textEditorProvider.notifier);
+
+    (Layers, Key?)? activeLayerData = ref.watch(activeLayerProvider);
+    LayerNotifier notifier = ref.read(activeLayerProvider.notifier);
+
     if (option == SubOptions.volume) {
       return const VolumeControllerWidget();
     } else if (option == SubOptions.speed) {
@@ -36,7 +46,7 @@ class SubOptionHelper extends ConsumerWidget {
           maxValue: 101,
           additionalText: "x",
           isDouble: true,
-          startAnimationIndex: 10,
+          startIndex: 10,
           opacityRanges: [10, 1, 15, .8, 20, .4, 30, .2],
         ),
       );
@@ -47,15 +57,30 @@ class SubOptionHelper extends ConsumerWidget {
     } else if (option == SubOptions.align) {
       return const AlignListWidget();
     } else if (option == SubOptions.opacity) {
+      Function(double) setter;
+
+      if (activeLayerData?.$1 == Layers.textOverlay) {
+        TextEditorClass textData =
+            textList.firstWhere((data) => data.key == activeLayerData?.$2);
+        setter = (value) {
+          textEditorNotifier.updateText(
+              textData.copyWith(opacity: (value / 100).clamp(0, 1)));
+        };
+      } else {
+        setter = (value) {};
+      }
+
       return Container(
         height: height * .08,
         width: width,
         color: secondaryBgColor,
         margin: const EdgeInsets.only(bottom: 2),
-        child: const HorizontalRuler(
+        child: HorizontalRuler(
           maxValue: 101,
-          startAnimationIndex: 90,
+          startIndex: 90,
+          enableStartAnimation: false,
           opacityRanges: [10, 1, 15, .8, 20, .4, 30, .2],
+          setter: setter,
         ),
       );
     } else if (option == SubOptions.duration) {
@@ -68,7 +93,7 @@ class SubOptionHelper extends ConsumerWidget {
           maxValue: videoState.totalDuration.inSeconds + 1,
           additionalText: "s",
           isDouble: true,
-          startAnimationIndex: 10,
+          startIndex: 10,
           opacityRanges: const [10, 1, 15, .8, 20, .4, 30, .2],
         ),
       );

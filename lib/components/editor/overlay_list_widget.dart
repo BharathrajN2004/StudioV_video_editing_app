@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:video_editing_app/components/text.dart';
+import 'package:video_editing_app/models/text_editor_class.model.dart';
+import 'package:video_editing_app/providers/text_editor.provider.dart';
 
 import '../../providers/controller.provider.dart';
 import '../../providers/active_layer.provider.dart';
@@ -13,97 +16,96 @@ class OverlayWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    // double aspectRatio = MediaQuery.of(context).size.aspectRatio;
+    double aspectRatio = MediaQuery.of(context).size.aspectRatio;
 
     final videoState = ref.watch(videoManagerProvider);
     final videoManager = ref.watch(videoManagerProvider.notifier);
 
-    Layers? activeLayer = ref.watch(activeLayerProvider);
+    (Layers, Key?)? activeLayer = ref.watch(activeLayerProvider);
     LayerNotifier notifier = ref.read(activeLayerProvider.notifier);
 
     int totalDuration = videoState.totalDuration.inSeconds + 1;
 
-    return Opacity(
-      opacity: activeLayer == Layers.textOverlay ||
-              activeLayer == Layers.imageOverlay ||
-              activeLayer == Layers.videoOverlay
-          ? 1
-          : .5,
-      child: SizedBox(
-        height: 45,
-        child: ListView.builder(
-            controller: videoManager.overlayScrollController,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: totalDuration,
-            padding: EdgeInsets.symmetric(horizontal: width * .48),
-            itemBuilder: (context, index) {
-              bool isSelected = activeLayer == Layers.imageOverlay;
-              return GestureDetector(
+    List<TextEditorClass> textList = ref.watch(textEditorProvider);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      controller: videoManager.overlayScrollController,
+      padding: EdgeInsets.symmetric(horizontal: width * .48),
+      child: Stack(
+        children: [
+          Opacity(
+            opacity: activeLayer == null ? 1 : .5,
+            child: Container(
+              height: 45,
+              width: (45 * totalDuration).toDouble(),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: secondaryColor,
+              ),
+            ),
+          ),
+          ...textList.map((data) {
+            double opacity = (activeLayer?.$1 == Layers.textOverlay &&
+                        activeLayer?.$2 == data.key) ||
+                    activeLayer == null
+                ? 1
+                : .5;
+            return Positioned(
+              left: (data.startDuration!.inMicroseconds * .0000455),
+              child: GestureDetector(
                 onTap: () {
-                  if (Layers.imageOverlay != activeLayer) {
-                    notifier.toggleActiveLayer(Layers.imageOverlay);
-                  }
+                  notifier.toggleActiveLayer(
+                    layer: Layers.textOverlay,
+                    key: data.key,
+                  );
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        // First Index
-                        index == 0
-                            ? const BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                bottomLeft: Radius.circular(12))
-                            // Last Index
-                            : index == totalDuration - 1
-                                ? const BorderRadius.only(
-                                    topRight: Radius.circular(12),
-                                    bottomRight: Radius.circular(12))
-                                // Others
-                                : BorderRadius.circular(0),
-                    border: isSelected
-                        ? Border(
-                            left: index == 0
-                                ? const BorderSide(
-                                    color: gradientColor1,
-                                    width: 2,
-                                  )
-                                : BorderSide.none,
-                            top: const BorderSide(
-                                color: gradientColor1, width: 2),
-                            bottom: const BorderSide(
-                                color: gradientColor1, width: 2),
-                            right: index == totalDuration - 1
-                                ? const BorderSide(
-                                    color: gradientColor1,
-                                    width: 2,
-                                  )
-                                : BorderSide.none,
-                          )
-                        : null,
-                  ),
-                  child: ClipRRect(
-                    borderRadius:
-                        // First Index
-                        index == 0
-                            ? const BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                bottomLeft: Radius.circular(10))
-                            // Last Index
-                            : index == totalDuration - 1
-                                ? const BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    bottomRight: Radius.circular(10))
-                                // Others
-                                : BorderRadius.circular(0),
+                child: AnimatedOpacity(
+                  opacity: opacity,
+                  duration: Durations.medium1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Container(
-                      width: 45,
-                      color: secondaryColor,
+                      width: ((data.endDuration!.inMicroseconds -
+                              data.startDuration!.inMicroseconds) *
+                          .0000455),
+                      height: 45,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: aspectRatio * 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            gradientColor1.withOpacity(.8),
+                            gradientColor2.withOpacity(.8)
+                          ],
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: CustomText(
+                        text: data.controller.text,
+                        size: largeTextSize * aspectRatio,
+                      ),
                     ),
                   ),
                 ),
-              );
-            }),
+              ),
+            );
+          }),
+        ],
       ),
     );
   }
 }
+
+
+
+// 
+// if (Layers.imageOverlay != activeLayer) {
+//                     notifier.toggleActiveLayer(Layers.imageOverlay);
+//                   }

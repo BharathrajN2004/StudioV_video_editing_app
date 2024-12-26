@@ -101,7 +101,7 @@ const List<Color> colorList = [
   Color(0xff8b00ff)
 ];
 
-List<String> fontList = [
+const List<String> fontList = [
   "Bangers",
   "Eater",
   "Flavors",

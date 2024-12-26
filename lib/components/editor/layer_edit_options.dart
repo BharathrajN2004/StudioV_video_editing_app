@@ -21,7 +21,7 @@ class _LayerEditOptionsState extends ConsumerState<LayerEditOptions> {
     double width = MediaQuery.of(context).size.width;
     double aspectRatio = MediaQuery.of(context).size.aspectRatio;
 
-    Layers? activeLayer = ref.watch(activeLayerProvider);
+    Layers? activeLayer = ref.watch(activeLayerProvider)?.$1;
 
     SubOptions? selectedOption = ref.watch(subOptionProvider);
     SubOptionNotifier optionNotifier = ref.read(subOptionProvider.notifier);
@@ -180,7 +180,7 @@ class _LayerEditOptionsState extends ConsumerState<LayerEditOptions> {
           left: 10,
           child: GestureDetector(
             onTap: () {
-              ref.read(activeLayerProvider.notifier).toggleActiveLayer(null);
+              ref.read(activeLayerProvider.notifier).toggleActiveLayer();
               ref.read(subOptionProvider.notifier).toggleSubOption(null);
             },
             child: Container(

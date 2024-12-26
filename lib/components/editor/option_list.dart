@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:video_editing_app/providers/text_extension_container.provider.dart';
 
 import '../../utilities/constants.dart';
 import '../../utilities/theme.dart';
@@ -40,31 +41,28 @@ class _OptionsListState extends ConsumerState<OptionsList> {
                 right: width * 0.05,
               ),
               itemBuilder: (context, index) {
-                bool isHovered = Options.values[index] == hoveredOption;
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      hoveredOption = Options.values[index];
-                    });
+                    if (Options.values[index] == Options.text) {
+                      ref
+                          .read(textExtensionProvider.notifier)
+                          .openExtension(null);
+                    }
                   },
                   child: Stack(
                     children: [
-                      MouseRegion(
-                        onHover: (event) => setHovered(Options.values[index]),
-                        onExit: (event) => setHovered(null),
-                        child: Container(
-                          width: width * .15,
-                          height: width * .15,
-                          margin: EdgeInsets.only(right: width * 0.02),
-                          decoration: BoxDecoration(
-                              color: secondaryColor,
-                              borderRadius: BorderRadius.circular(8)),
-                          alignment: Alignment.center,
-                          child: Image.asset(
-                            "assets/icons/${!isHovered ? Options.values[index].name : "${Options.values[index].name}_H"}.png",
-                            height: width * .065,
-                            fit: BoxFit.fitHeight,
-                          ),
+                      Container(
+                        width: width * .15,
+                        height: width * .15,
+                        margin: EdgeInsets.only(right: width * 0.02),
+                        decoration: BoxDecoration(
+                            color: secondaryColor,
+                            borderRadius: BorderRadius.circular(8)),
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                          "assets/icons/${Options.values[index].name}.png",
+                          height: width * .065,
+                          fit: BoxFit.fitHeight,
                         ),
                       ),
                       Positioned(

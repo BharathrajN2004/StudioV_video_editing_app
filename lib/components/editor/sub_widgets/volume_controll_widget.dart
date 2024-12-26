@@ -39,6 +39,7 @@ class _VolumeControllerWidgetState
                       opacity: .3,
                       child: HorizontalRuler(
                           maxValue: 101,
+                          startIndex: 30,
                           setter: (value) {
                             videoState
                                 .videoControllers[videoState.currentVideoIndex]
@@ -50,6 +51,7 @@ class _VolumeControllerWidgetState
               : Expanded(
                   child: HorizontalRuler(
                       maxValue: 101,
+                      startIndex: 30,
                       setter: (value) {
                         videoState
                             .videoControllers[videoState.currentVideoIndex]

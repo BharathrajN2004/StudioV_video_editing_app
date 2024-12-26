@@ -18,27 +18,28 @@ class MusicList extends ConsumerWidget {
     final videoState = ref.watch(videoManagerProvider);
     final videoManager = ref.watch(videoManagerProvider.notifier);
 
-    Layers? activeLayer = ref.watch(activeLayerProvider);
+    Layers? activeLayer = ref.watch(activeLayerProvider)?.$1;
     LayerNotifier notifier = ref.read(activeLayerProvider.notifier);
 
     int totalDuration = videoState.totalDuration.inSeconds + 1;
 
     return Opacity(
-      opacity: activeLayer == Layers.music ? 1 : .5,
+      opacity: activeLayer == Layers.music || activeLayer == null ? 1 : .5,
       child: SizedBox(
         height: 45,
         child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
+            // physics: const BouncingScrollPhysics(),
             controller: videoManager.musicScrollController,
             scrollDirection: Axis.horizontal,
             itemCount: totalDuration,
             padding: EdgeInsets.symmetric(horizontal: width * .48),
             itemBuilder: (context, index) {
+              bool isLast = (totalDuration) == index + 1;
               bool isSelected = Layers.music == activeLayer;
               return GestureDetector(
                 onTap: () {
                   if (Layers.music != activeLayer) {
-                    notifier.toggleActiveLayer(Layers.music);
+                    notifier.toggleActiveLayer(layer: Layers.music);
                   }
                 },
                 child: Container(
@@ -50,7 +51,7 @@ class MusicList extends ConsumerWidget {
                                 topLeft: Radius.circular(12),
                                 bottomLeft: Radius.circular(12))
                             // Last Index
-                            : index == totalDuration - 1
+                            : isLast
                                 ? const BorderRadius.only(
                                     topRight: Radius.circular(12),
                                     bottomRight: Radius.circular(12))
@@ -68,7 +69,7 @@ class MusicList extends ConsumerWidget {
                                 color: gradientColor1, width: 2),
                             bottom: const BorderSide(
                                 color: gradientColor1, width: 2),
-                            right: index == totalDuration - 1
+                            right: isLast
                                 ? const BorderSide(
                                     color: gradientColor1,
                                     width: 2,
@@ -85,14 +86,14 @@ class MusicList extends ConsumerWidget {
                                 topLeft: Radius.circular(10),
                                 bottomLeft: Radius.circular(10))
                             // Last Index
-                            : index == totalDuration - 1
+                            : isLast
                                 ? const BorderRadius.only(
                                     topRight: Radius.circular(10),
                                     bottomRight: Radius.circular(10))
                                 // Others
                                 : BorderRadius.circular(0),
                     child: Container(
-                      width: 60,
+                      width: 45,
                       color: secondaryColor,
                     ),
                   ),
